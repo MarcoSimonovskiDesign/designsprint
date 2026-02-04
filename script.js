@@ -51,24 +51,23 @@ const phases = [
   },
 ];
 
-const promptFragments = {
-  industries: [
-    "boutique wellness",
-    "fintech savings",
-    "artisan coffee",
-    "sustainable fashion",
-    "city bike-share",
-    "indie game",
-  ],
-  audiences: [
-    "first-time founders",
-    "urban creatives",
-    "remote teams",
-    "eco-conscious shoppers",
-    "college students",
-    "busy parents",
-  ],
-};
+const promptIdeas = [
+  "a coastal guesthouse brand targeting weekend travelers.",
+  "a neighborhood bakery brand targeting early-morning commuters.",
+  "a modular furniture brand targeting first-apartment renters.",
+  "a zero-waste refill brand targeting eco-conscious shoppers.",
+  "a language tutoring brand targeting international students.",
+  "a pet wellness brand targeting urban dog owners.",
+  "a mindful tech break brand targeting remote teams.",
+  "a mobile car wash brand targeting busy parents.",
+  "a local museum brand targeting family day-trippers.",
+  "a women’s running club brand targeting novice runners.",
+  "a music education brand targeting teenagers in after-school programs.",
+  "a boutique hotel brand targeting design-focused travelers.",
+  "a craft soda brand targeting summer festival goers.",
+  "a plant delivery brand targeting apartment dwellers.",
+  "a community cycling brand targeting city commuters.",
+];
 
 let timerId = null;
 let totalSeconds = 0;
@@ -225,10 +224,7 @@ timeSlider.addEventListener("input", () => {
 
 promptBtn.addEventListener("click", () => {
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
-  const prompt = `a ${pick(promptFragments.industries)} brand targeting ${pick(
-    promptFragments.audiences
-  )}.`;
-  promptText.textContent = prompt;
+  promptText.textContent = pick(promptIdeas);
 });
 
 updateTotalLabel();

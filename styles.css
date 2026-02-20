@@ -64,6 +64,13 @@ header {
   gap: 12px;
 }
 
+.logo {
+  max-width: 320px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .eyebrow {
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -80,7 +87,7 @@ header {
 .control-card {
   background: var(--card);
   border-radius: 20px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
   display: flex;
@@ -196,6 +203,11 @@ button:active {
   border: 1px dashed rgba(198, 215, 247, 0.3);
 }
 
+.current-phase.active {
+  border-color: rgba(198, 215, 247, 0.6);
+  background: rgba(24, 46, 90, 0.95);
+}
+
 .phase-label {
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -216,7 +228,7 @@ button:active {
 .phase-board {
   background: var(--card);
   border-radius: 20px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
 }
@@ -244,9 +256,18 @@ button:active {
   align-self: stretch;
 }
 
-.column-middle .control-card,
-.column-right .phase-board {
-  height: 100%;
+
+.credit-logo {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.credit-logo img {
+  max-width: 200px;
+  width: auto;
+  height: auto;
+  opacity: 0.7;
 }
 
 .phase-item.active {
@@ -354,6 +375,11 @@ button:active {
 
   .phase-board {
     padding: 14px;
+  }
+
+  .column-middle .control-card,
+  .column-right .phase-board {
+    min-height: 0;
   }
 
   .phase-item {

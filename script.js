@@ -69,6 +69,63 @@ const promptIdeas = [
   "a community cycling brand targeting city commuters.",
 ];
 
+const promptAngles = [
+  "community-first",
+  "premium minimalist",
+  "playful and youthful",
+  "eco-conscious",
+  "tech-forward",
+  "artisan handcrafted",
+  "bold and energetic",
+  "calm and trustworthy",
+];
+
+const getFallbackPrompt = () => {
+  const pick = (list) => list[Math.floor(Math.random() * list.length)];
+  return pick(promptIdeas);
+};
+
+const getAiPrompt = async () => {
+  const nonce = Math.random().toString(36).slice(2);
+  const angle = promptAngles[Math.floor(Math.random() * promptAngles.length)];
+  const response = await fetch(
+    `https://text.pollinations.ai/openai?nonce=${nonce}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "openai",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You generate concise branding prompts. Return exactly one sentence in this format: a ____ brand targeting ____.",
+          },
+          {
+            role: "user",
+            content:
+              `Generate one realistic branding prompt now. Use a ${angle} angle, keep it specific and natural, and do not repeat any previous prompt.`,
+          },
+        ],
+        temperature: 1.2,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`AI request failed with status ${response.status}`);
+  }
+
+  const data = await response.json();
+  const text = data?.choices?.[0]?.message?.content?.trim();
+  if (!text) {
+    throw new Error("No prompt text returned from AI response.");
+  }
+  return text;
+};
+
 let timerId = null;
 let totalSeconds = 0;
 let remainingSeconds = 0;
@@ -136,6 +193,7 @@ const updatePhaseDisplay = () => {
   const currentPhase = phases[currentPhaseIndex];
   currentPhaseEl.textContent = currentPhase?.name ?? "Complete";
   currentPhaseDescriptionEl.textContent = currentPhase?.description ?? "";
+  currentPhaseEl.parentElement?.classList.toggle("active", Boolean(currentPhase));
   phaseTimeEl.textContent = formatTime(phaseRemaining);
   countdownEl.textContent = formatTime(remainingSeconds);
   const phaseDuration = phaseDurations[currentPhaseIndex] ?? 0;
@@ -222,9 +280,19 @@ timeSlider.addEventListener("input", () => {
   }
 });
 
-promptBtn.addEventListener("click", () => {
-  const pick = (list) => list[Math.floor(Math.random() * list.length)];
-  promptText.textContent = pick(promptIdeas);
+promptBtn.addEventListener("click", async () => {
+  const originalLabel = promptBtn.textContent;
+  promptBtn.disabled = true;
+  promptBtn.textContent = "Generating...";
+
+  try {
+    promptText.textContent = await getAiPrompt();
+  } catch {
+    promptText.textContent = getFallbackPrompt();
+  } finally {
+    promptBtn.disabled = false;
+    promptBtn.textContent = originalLabel;
+  }
 });
 
 updateTotalLabel();
